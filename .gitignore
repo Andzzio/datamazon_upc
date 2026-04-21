@@ -1,0 +1,26 @@
+# Build output
+Debug/
+Release/
+x64/
+x86/
+*.user
+*.suo
+*.aps
+
+# VS cache/metadata
+.vs/
+ipch/
+*.ncb
+*.sdf
+*.opensdf
+
+# Compiled
+*.obj
+*.pch
+*.idb
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.dll
+*.exe
