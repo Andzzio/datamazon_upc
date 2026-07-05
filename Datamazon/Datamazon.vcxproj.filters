@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Archivos de origen">
@@ -13,15 +13,167 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Domain">
+      <UniqueIdentifier>{6d967272-466d-4952-bfbc-87779d7d4567}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Domain\Entities">
+      <UniqueIdentifier>{8d967272-466d-4952-bfbc-87779d7d4568}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Domain\Structures">
+      <UniqueIdentifier>{9d967272-466d-4952-bfbc-87779d7d4569}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Domain\Repositories">
+      <UniqueIdentifier>{ad967272-466d-4952-bfbc-87779d7d4570}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Infrastructure">
+      <UniqueIdentifier>{bd967272-466d-4952-bfbc-87779d7d4571}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Infrastructure\Datasources">
+      <UniqueIdentifier>{cd967272-466d-4952-bfbc-87779d7d4572}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Infrastructure\Repositories">
+      <UniqueIdentifier>{dd967272-466d-4952-bfbc-87779d7d4573}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Infrastructure\Sorting">
+      <UniqueIdentifier>{ed967272-466d-4952-bfbc-87779d7d4574}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application">
+      <UniqueIdentifier>{fd967272-466d-4952-bfbc-87779d7d4575}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application\UseCases">
+      <UniqueIdentifier>{0d967272-466d-4952-bfbc-87779d7d4576}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="home_screen.cpp">
       <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\UseCaseRegistry.cpp">
+      <Filter>Application</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="home_screen.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="Domain\Entities\Entity.h">
+      <Filter>Domain\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Entities\Person.h">
+      <Filter>Domain\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Entities\Client.h">
+      <Filter>Domain\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Entities\Admin.h">
+      <Filter>Domain\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Entities\Product.h">
+      <Filter>Domain\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Entities\Supplier.h">
+      <Filter>Domain\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Entities\Warehouse.h">
+      <Filter>Domain\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Entities\Category.h">
+      <Filter>Domain\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Entities\Coupon.h">
+      <Filter>Domain\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Entities\Review.h">
+      <Filter>Domain\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Entities\OrderDetail.h">
+      <Filter>Domain\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Entities\Order.h">
+      <Filter>Domain\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Entities\Payment.h">
+      <Filter>Domain\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Entities\Shipment.h">
+      <Filter>Domain\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Entities\Invoice.h">
+      <Filter>Domain\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Structures\Node.h">
+      <Filter>Domain\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Structures\SimpleList.h">
+      <Filter>Domain\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Structures\DoubleList.h">
+      <Filter>Domain\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Structures\Stack.h">
+      <Filter>Domain\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Structures\Queue.h">
+      <Filter>Domain\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Structures\BST.h">
+      <Filter>Domain\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Structures\AVLTree.h">
+      <Filter>Domain\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Structures\HashTable.h">
+      <Filter>Domain\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Structures\Graph.h">
+      <Filter>Domain\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Repositories\IProductRepository.h">
+      <Filter>Domain\Repositories</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Repositories\IClientRepository.h">
+      <Filter>Domain\Repositories</Filter>
+    </ClInclude>
+    <ClInclude Include="Domain\Repositories\ISupplierRepository.h">
+      <Filter>Domain\Repositories</Filter>
+    </ClInclude>
+    <ClInclude Include="Infrastructure\Datasources\TextFileDatasource.h">
+      <Filter>Infrastructure\Datasources</Filter>
+    </ClInclude>
+    <ClInclude Include="Infrastructure\Datasources\DatasetGenerator.h">
+      <Filter>Infrastructure\Datasources</Filter>
+    </ClInclude>
+    <ClInclude Include="Infrastructure\Repositories\ProductRepository.h">
+      <Filter>Infrastructure\Repositories</Filter>
+    </ClInclude>
+    <ClInclude Include="Infrastructure\Repositories\ClientRepository.h">
+      <Filter>Infrastructure\Repositories</Filter>
+    </ClInclude>
+    <ClInclude Include="Infrastructure\Repositories\SupplierRepository.h">
+      <Filter>Infrastructure\Repositories</Filter>
+    </ClInclude>
+    <ClInclude Include="Infrastructure\Sorting\Sorting.h">
+      <Filter>Infrastructure\Sorting</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\UseCases\SearchProductUseCase.h">
+      <Filter>Application\UseCases</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\UseCases\ManageCartUseCase.h">
+      <Filter>Application\UseCases</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\UseCases\ProcessOrderUseCase.h">
+      <Filter>Application\UseCases</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\UseCases\RunBenchmarksUseCase.h">
+      <Filter>Application\UseCases</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\UseCaseRegistry.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="home_screen.resx">
+      <Filter>Archivos de recursos</Filter>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

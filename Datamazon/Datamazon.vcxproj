@@ -121,11 +121,50 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="home_screen.cpp" />
+    <ClCompile Include="Application\UseCaseRegistry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="home_screen.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="Domain\Entities\Entity.h" />
+    <ClInclude Include="Domain\Entities\Person.h" />
+    <ClInclude Include="Domain\Entities\Client.h" />
+    <ClInclude Include="Domain\Entities\Admin.h" />
+    <ClInclude Include="Domain\Entities\Product.h" />
+    <ClInclude Include="Domain\Entities\Supplier.h" />
+    <ClInclude Include="Domain\Entities\Warehouse.h" />
+    <ClInclude Include="Domain\Entities\Category.h" />
+    <ClInclude Include="Domain\Entities\Coupon.h" />
+    <ClInclude Include="Domain\Entities\Review.h" />
+    <ClInclude Include="Domain\Entities\OrderDetail.h" />
+    <ClInclude Include="Domain\Entities\Order.h" />
+    <ClInclude Include="Domain\Entities\Payment.h" />
+    <ClInclude Include="Domain\Entities\Shipment.h" />
+    <ClInclude Include="Domain\Entities\Invoice.h" />
+    <ClInclude Include="Domain\Structures\Node.h" />
+    <ClInclude Include="Domain\Structures\SimpleList.h" />
+    <ClInclude Include="Domain\Structures\DoubleList.h" />
+    <ClInclude Include="Domain\Structures\Stack.h" />
+    <ClInclude Include="Domain\Structures\Queue.h" />
+    <ClInclude Include="Domain\Structures\BST.h" />
+    <ClInclude Include="Domain\Structures\AVLTree.h" />
+    <ClInclude Include="Domain\Structures\HashTable.h" />
+    <ClInclude Include="Domain\Structures\Graph.h" />
+    <ClInclude Include="Domain\Repositories\IProductRepository.h" />
+    <ClInclude Include="Domain\Repositories\IClientRepository.h" />
+    <ClInclude Include="Domain\Repositories\ISupplierRepository.h" />
+    <ClInclude Include="Infrastructure\Datasources\TextFileDatasource.h" />
+    <ClInclude Include="Infrastructure\Datasources\DatasetGenerator.h" />
+    <ClInclude Include="Infrastructure\Repositories\ProductRepository.h" />
+    <ClInclude Include="Infrastructure\Repositories\ClientRepository.h" />
+    <ClInclude Include="Infrastructure\Repositories\SupplierRepository.h" />
+    <ClInclude Include="Infrastructure\Sorting\Sorting.h" />
+    <ClInclude Include="Application\UseCases\SearchProductUseCase.h" />
+    <ClInclude Include="Application\UseCases\ManageCartUseCase.h" />
+    <ClInclude Include="Application\UseCases\ProcessOrderUseCase.h" />
+    <ClInclude Include="Application\UseCases\RunBenchmarksUseCase.h" />
+    <ClInclude Include="Application\UseCaseRegistry.h" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="home_screen.resx">

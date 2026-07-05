@@ -1,0 +1,10 @@
+1,EduWorld 1,contact@GlobalImport1.com,910011290,USA,Educacion
+2,OmegaCorp 2,contact@BookDistributor2.com,910008656,Peru,Educacion
+3,EduWorld 3,contact@BookDistributor3.com,910017932,Peru,Tecnologia
+4,TechSupplier 4,contact@TechSupplier4.com,910018302,USA,Ropa
+5,BookDistributor 5,contact@TechSupplier5.com,910020551,Peru,Educacion
+6,DeltaTrade 6,contact@FashionFactory6.com,910025682,USA,Ropa
+7,BookDistributor 7,contact@TechSupplier7.com,910007769,Peru,Educacion
+8,AlfaLogistics 8,contact@DeltaTrade8.com,910029460,USA,Ropa
+9,TechSupplier 9,contact@FashionFactory9.com,910009399,Peru,Tecnologia
+10,EduWorld 10,contact@PrimeGoods10.com,910005146,USA,Tecnologia
