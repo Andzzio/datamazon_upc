@@ -131,6 +131,25 @@ namespace Datamazon {
 		System::Windows::Forms::ComboBox^ cbDestinationCities;
 		System::Windows::Forms::Timer^ timerGPS;
 
+		System::Windows::Forms::Panel^ panelLogin;
+		System::Windows::Forms::Panel^ panelLoginCard;
+		System::Windows::Forms::TextBox^ txtLoginUser;
+		System::Windows::Forms::TextBox^ txtLoginPass;
+		System::Windows::Forms::Button^ btnLoginSubmit;
+		System::Windows::Forms::Panel^ panelCoupon;
+		System::Windows::Forms::TextBox^ txtCouponCode;
+		System::Windows::Forms::Button^ btnApplyCoupon;
+		System::Windows::Forms::Label^ lblCouponStatus;
+		System::Windows::Forms::Panel^ panelInvoiceModal;
+		System::Windows::Forms::Label^ lblInvoiceDetails;
+		System::Windows::Forms::Button^ btnCloseInvoiceModal;
+		System::Windows::Forms::TabPage^ tabAdminClients;
+		System::Windows::Forms::TabPage^ tabAdminSuppliers;
+		System::Windows::Forms::TabPage^ tabAdminWarehouses;
+		System::Windows::Forms::DataGridView^ gridAdminClients;
+		System::Windows::Forms::DataGridView^ gridAdminSuppliers;
+		System::Windows::Forms::DataGridView^ gridAdminWarehouses;
+
 		int* gpsPath;
 		int gpsPathLength;
 		int gpsCurrentStep;
@@ -144,6 +163,9 @@ namespace Datamazon {
 		int currentPage;
 		int totalPages;
 		static const int PAGE_SIZE = 10;
+		Client* activeClient;
+		String^ currentUserRole;
+		Coupon* activeCoupon;
 
 	public:
 		home_screen(void)
@@ -152,10 +174,13 @@ namespace Datamazon {
 			registry = UseCaseRegistry::getInstance();
 			isCartOpen = false;
 			cartTargetWidth = 0;
-			activeView = "store";
+			activeView = "login";
 			selectedProduct = nullptr;
 			hoveredCard = nullptr;
 			hoveredCardButton = 0;
+			activeClient = nullptr;
+			currentUserRole = "client";
+			activeCoupon = nullptr;
 			currentProductList = new std::vector<Product*>();
 			currentPage = 1;
 			totalPages = 1;
@@ -317,7 +342,14 @@ namespace Datamazon {
 				listCartItems->Items->Add(toSystemString(current->value->getName()) + "   S/. " + current->value->getPrice().ToString("F2"));
 				current = current->next;
 			}
-			lblCartTotal->Text = "Total: S/. " + registry->getManageCartUseCase()->getCartTotal().ToString("F2");
+			double total = registry->getManageCartUseCase()->getCartTotal();
+			if (activeCoupon != nullptr) {
+				double discount = total * (activeCoupon->getDiscountPercent() / 100.0);
+				total -= discount;
+				lblCartTotal->Text = "Total: S/. " + total.ToString("F2") + " (-" + activeCoupon->getDiscountPercent().ToString("F0") + "%)";
+			} else {
+				lblCartTotal->Text = "Total: S/. " + total.ToString("F2");
+			}
 			btnCartToggle->Text = L"\U0001F6D2 Carrito (" + cart->count().ToString() + ")";
 			panelStructureDraw->Invalidate();
 		}
@@ -329,6 +361,8 @@ namespace Datamazon {
 		}
 
 		void switchActiveView() {
+			panelLogin->Visible = (activeView == "login");
+			panelHeader->Visible = (activeView != "login");
 			panelContent->Visible = (activeView == "store");
 			panelFilters->Visible = (activeView == "store");
 			panelProductDetail->Visible = (activeView == "detail");
@@ -382,5 +416,8 @@ namespace Datamazon {
 		void btnGoPage_Click(System::Object^ sender, System::EventArgs^ e);
 		void renderCurrentPageProducts();
 		void applySortingToCurrentList();
+		void btnLoginSubmit_Click(System::Object^ sender, System::EventArgs^ e);
+		void btnApplyCoupon_Click(System::Object^ sender, System::EventArgs^ e);
+		void btnCloseInvoiceModal_Click(System::Object^ sender, System::EventArgs^ e);
 	};
 }

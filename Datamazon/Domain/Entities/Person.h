@@ -17,5 +17,6 @@ public:
 
   string getName() { return name; }
   string getEmail() { return email; }
+  string getPhone() { return phoneNumber; }
   ~Person() {}
 };

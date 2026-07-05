@@ -239,7 +239,7 @@ void home_screen::InitializeComponent(void)
 	lblCartSubtitle->AutoSize = true;
 
 	this->listCartItems = gcnew ListBox();
-	this->listCartItems->Size = System::Drawing::Size(275, 430);
+	this->listCartItems->Size = System::Drawing::Size(275, 320);
 	this->listCartItems->Location = Point(20, 75);
 	this->listCartItems->Font = gcnew System::Drawing::Font(L"Segoe UI", 10);
 	this->listCartItems->BorderStyle = BorderStyle::None;
@@ -248,17 +248,53 @@ void home_screen::InitializeComponent(void)
 	this->listCartItems->DrawMode = System::Windows::Forms::DrawMode::OwnerDrawFixed;
 	this->listCartItems->DrawItem += gcnew DrawItemEventHandler(this, &home_screen::listCartItems_DrawItem);
 
+	Label^ lblCoupon = gcnew Label();
+	lblCoupon->Text = L"Cupon de Descuento";
+	lblCoupon->Font = gcnew System::Drawing::Font(L"Segoe UI", 9, FontStyle::Bold);
+	lblCoupon->ForeColor = Color::FromArgb(71, 85, 105);
+	lblCoupon->Location = Point(20, 405);
+	lblCoupon->AutoSize = true;
+
+	Panel^ panelCouponBg = gcnew Panel();
+	panelCouponBg->Size = System::Drawing::Size(170, 30);
+	panelCouponBg->Location = Point(20, 428);
+	panelCouponBg->BackColor = Color::Transparent;
+	panelCouponBg->Paint += gcnew PaintEventHandler(this, &home_screen::inputPanel_Paint);
+
+	this->txtCouponCode = gcnew TextBox();
+	this->txtCouponCode->Size = System::Drawing::Size(158, 18);
+	this->txtCouponCode->Location = Point(6, 6);
+	this->txtCouponCode->BorderStyle = BorderStyle::None;
+	this->txtCouponCode->BackColor = Color::White;
+	this->txtCouponCode->Font = gcnew System::Drawing::Font(L"Segoe UI", 9);
+	panelCouponBg->Controls->Add(this->txtCouponCode);
+
+	this->btnApplyCoupon = gcnew Button();
+	this->btnApplyCoupon->Text = L"Aplicar";
+	this->btnApplyCoupon->Size = System::Drawing::Size(95, 30);
+	this->btnApplyCoupon->Location = Point(200, 428);
+	styleButton(this->btnApplyCoupon, Color::FromArgb(55, 71, 90), Color::White, Color::FromArgb(71, 85, 105), Color::FromArgb(51, 65, 85), 9);
+	this->btnApplyCoupon->Click += gcnew EventHandler(this, &home_screen::btnApplyCoupon_Click);
+	setRegionRounded(this->btnApplyCoupon, 6);
+
+	this->lblCouponStatus = gcnew Label();
+	this->lblCouponStatus->Text = L"";
+	this->lblCouponStatus->Font = gcnew System::Drawing::Font(L"Segoe UI", 8, FontStyle::Italic);
+	this->lblCouponStatus->ForeColor = Color::FromArgb(71, 85, 105);
+	this->lblCouponStatus->Location = Point(20, 465);
+	this->lblCouponStatus->Size = System::Drawing::Size(275, 18);
+
 	this->lblCartTotal = gcnew Label();
 	this->lblCartTotal->Text = L"Total: S/. 0.00";
 	this->lblCartTotal->Font = gcnew System::Drawing::Font(L"Segoe UI", 14, FontStyle::Bold);
 	this->lblCartTotal->ForeColor = Color::FromArgb(177, 39, 4);
-	this->lblCartTotal->Location = Point(20, 520);
+	this->lblCartTotal->Location = Point(20, 490);
 	this->lblCartTotal->AutoSize = true;
 
 	this->btnCheckout = gcnew Button();
 	this->btnCheckout->Text = L"Proceder al Despacho";
 	this->btnCheckout->Size = System::Drawing::Size(275, 40);
-	this->btnCheckout->Location = Point(20, 555);
+	this->btnCheckout->Location = Point(20, 525);
 	styleButton(this->btnCheckout, Color::FromArgb(255, 153, 0), Color::White, Color::FromArgb(230, 130, 0), Color::FromArgb(200, 110, 0), 10);
 	this->btnCheckout->Click += gcnew EventHandler(this, &home_screen::btnCheckout_Click);
 	setRegionRounded(this->btnCheckout, 12);
@@ -266,7 +302,7 @@ void home_screen::InitializeComponent(void)
 	this->btnClearCart = gcnew Button();
 	this->btnClearCart->Text = L"Eliminar Ultimo (Pop)";
 	this->btnClearCart->Size = System::Drawing::Size(275, 36);
-	this->btnClearCart->Location = Point(20, 605);
+	this->btnClearCart->Location = Point(20, 575);
 	styleButton(this->btnClearCart, Color::FromArgb(239, 68, 68), Color::White, Color::FromArgb(220, 50, 50), Color::FromArgb(200, 40, 40), 9);
 	this->btnClearCart->Click += gcnew EventHandler(this, &home_screen::btnClearCart_Click);
 	setRegionRounded(this->btnClearCart, 12);
@@ -274,6 +310,10 @@ void home_screen::InitializeComponent(void)
 	this->panelCart->Controls->Add(this->lblCartTitle);
 	this->panelCart->Controls->Add(lblCartSubtitle);
 	this->panelCart->Controls->Add(this->listCartItems);
+	this->panelCart->Controls->Add(lblCoupon);
+	this->panelCart->Controls->Add(panelCouponBg);
+	this->panelCart->Controls->Add(this->btnApplyCoupon);
+	this->panelCart->Controls->Add(this->lblCouponStatus);
 	this->panelCart->Controls->Add(this->lblCartTotal);
 	this->panelCart->Controls->Add(this->btnCheckout);
 	this->panelCart->Controls->Add(this->btnClearCart);
@@ -717,6 +757,76 @@ void home_screen::InitializeComponent(void)
 	this->tabControlAdmin->TabPages->Add(this->tabCrud);
 	this->tabControlAdmin->TabPages->Add(this->tabBenchmarks);
 	this->tabControlAdmin->TabPages->Add(this->tabStructures);
+
+	this->tabAdminClients = gcnew TabPage();
+	this->tabAdminClients->Text = L"Clientes Registrados";
+	this->tabAdminClients->BackColor = Color::White;
+
+	this->gridAdminClients = gcnew DataGridView();
+	this->gridAdminClients->Size = System::Drawing::Size(1020, 500);
+	this->gridAdminClients->Location = Point(20, 20);
+	this->gridAdminClients->ReadOnly = true;
+	this->gridAdminClients->AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode::Fill;
+	this->gridAdminClients->BackgroundColor = Color::FromArgb(248, 250, 252);
+	this->gridAdminClients->BorderStyle = BorderStyle::None;
+	this->gridAdminClients->Font = gcnew System::Drawing::Font(L"Segoe UI", 9);
+	this->gridAdminClients->ColumnHeadersDefaultCellStyle->BackColor = Color::FromArgb(241, 245, 249);
+	this->gridAdminClients->EnableHeadersVisualStyles = false;
+	this->gridAdminClients->ColumnCount = 6;
+	this->gridAdminClients->Columns[0]->Name = L"ID";
+	this->gridAdminClients->Columns[1]->Name = L"Nombre";
+	this->gridAdminClients->Columns[2]->Name = L"Correo";
+	this->gridAdminClients->Columns[3]->Name = L"Celular";
+	this->gridAdminClients->Columns[4]->Name = L"Direccion";
+	this->gridAdminClients->Columns[5]->Name = L"Membresia";
+	this->tabAdminClients->Controls->Add(this->gridAdminClients);
+
+	this->tabAdminSuppliers = gcnew TabPage();
+	this->tabAdminSuppliers->Text = L"Proveedores";
+	this->tabAdminSuppliers->BackColor = Color::White;
+
+	this->gridAdminSuppliers = gcnew DataGridView();
+	this->gridAdminSuppliers->Size = System::Drawing::Size(1020, 500);
+	this->gridAdminSuppliers->Location = Point(20, 20);
+	this->gridAdminSuppliers->ReadOnly = true;
+	this->gridAdminSuppliers->AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode::Fill;
+	this->gridAdminSuppliers->BackgroundColor = Color::FromArgb(248, 250, 252);
+	this->gridAdminSuppliers->BorderStyle = BorderStyle::None;
+	this->gridAdminSuppliers->Font = gcnew System::Drawing::Font(L"Segoe UI", 9);
+	this->gridAdminSuppliers->ColumnHeadersDefaultCellStyle->BackColor = Color::FromArgb(241, 245, 249);
+	this->gridAdminSuppliers->EnableHeadersVisualStyles = false;
+	this->gridAdminSuppliers->ColumnCount = 6;
+	this->gridAdminSuppliers->Columns[0]->Name = L"ID";
+	this->gridAdminSuppliers->Columns[1]->Name = L"Nombre";
+	this->gridAdminSuppliers->Columns[2]->Name = L"Correo";
+	this->gridAdminSuppliers->Columns[3]->Name = L"Telefono";
+	this->gridAdminSuppliers->Columns[4]->Name = L"Pais";
+	this->gridAdminSuppliers->Columns[5]->Name = L"Categoria";
+	this->tabAdminSuppliers->Controls->Add(this->gridAdminSuppliers);
+
+	this->tabAdminWarehouses = gcnew TabPage();
+	this->tabAdminWarehouses->Text = L"Almacenes";
+	this->tabAdminWarehouses->BackColor = Color::White;
+
+	this->gridAdminWarehouses = gcnew DataGridView();
+	this->gridAdminWarehouses->Size = System::Drawing::Size(1020, 500);
+	this->gridAdminWarehouses->Location = Point(20, 20);
+	this->gridAdminWarehouses->ReadOnly = true;
+	this->gridAdminWarehouses->AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode::Fill;
+	this->gridAdminWarehouses->BackgroundColor = Color::FromArgb(248, 250, 252);
+	this->gridAdminWarehouses->BorderStyle = BorderStyle::None;
+	this->gridAdminWarehouses->Font = gcnew System::Drawing::Font(L"Segoe UI", 9);
+	this->gridAdminWarehouses->ColumnHeadersDefaultCellStyle->BackColor = Color::FromArgb(241, 245, 249);
+	this->gridAdminWarehouses->EnableHeadersVisualStyles = false;
+	this->gridAdminWarehouses->ColumnCount = 3;
+	this->gridAdminWarehouses->Columns[0]->Name = L"ID";
+	this->gridAdminWarehouses->Columns[1]->Name = L"Ubicacion";
+	this->gridAdminWarehouses->Columns[2]->Name = L"Capacidad";
+	this->tabAdminWarehouses->Controls->Add(this->gridAdminWarehouses);
+
+	this->tabControlAdmin->TabPages->Add(this->tabAdminClients);
+	this->tabControlAdmin->TabPages->Add(this->tabAdminSuppliers);
+	this->tabControlAdmin->TabPages->Add(this->tabAdminWarehouses);
 	this->panelAdmin->Controls->Add(this->tabControlAdmin);
 
 	this->panelGPS = gcnew Panel();
@@ -782,6 +892,156 @@ void home_screen::InitializeComponent(void)
 	this->Controls->Add(this->panelGPS);
 	this->Controls->Add(this->panelFilters);
 	this->Controls->Add(this->panelHeader);
+
+	this->panelHeader->Visible = false;
+	this->panelFilters->Visible = false;
+	this->panelCart->Visible = false;
+	this->panelContent->Visible = false;
+	this->panelProductDetail->Visible = false;
+	this->panelAdmin->Visible = false;
+	this->panelGPS->Visible = false;
+
+	this->panelLogin = gcnew Panel();
+	this->panelLogin->Size = System::Drawing::Size(1100, 750);
+	this->panelLogin->Location = Point(0, 0);
+	this->panelLogin->BackColor = Color::FromArgb(15, 23, 42);
+
+	this->panelLoginCard = gcnew Panel();
+	this->panelLoginCard->Size = System::Drawing::Size(400, 450);
+	this->panelLoginCard->Location = Point(350, 150);
+	this->panelLoginCard->BackColor = Color::FromArgb(30, 41, 59);
+	setRegionRounded(this->panelLoginCard, 20);
+
+	PictureBox^ picLoginLogo = gcnew PictureBox();
+	picLoginLogo->Size = System::Drawing::Size(200, 60);
+	picLoginLogo->Location = Point(100, 20);
+	picLoginLogo->SizeMode = PictureBoxSizeMode::Zoom;
+	picLoginLogo->BackColor = Color::Transparent;
+	bool hasLogo = false;
+	if (System::IO::File::Exists(logoPath)) {
+		try {
+			picLoginLogo->Image = Image::FromFile(logoPath);
+			hasLogo = true;
+		} catch (...) {}
+	}
+
+	Label^ lblLoginTitle = gcnew Label();
+	lblLoginTitle->Text = L"datamazon";
+	lblLoginTitle->Font = gcnew System::Drawing::Font(L"Segoe UI", 28, FontStyle::Bold);
+	lblLoginTitle->ForeColor = Color::FromArgb(255, 153, 0);
+	lblLoginTitle->Location = Point(20, 30);
+	lblLoginTitle->Size = System::Drawing::Size(360, 50);
+	lblLoginTitle->TextAlign = ContentAlignment::MiddleCenter;
+
+	Label^ lblLoginSubtitle = gcnew Label();
+	lblLoginSubtitle->Text = L"Bienvenido a la tienda virtual";
+	lblLoginSubtitle->Font = gcnew System::Drawing::Font(L"Segoe UI", 10);
+	lblLoginSubtitle->ForeColor = Color::FromArgb(148, 163, 184);
+	lblLoginSubtitle->Location = Point(20, 85);
+	lblLoginSubtitle->Size = System::Drawing::Size(360, 20);
+	lblLoginSubtitle->TextAlign = ContentAlignment::MiddleCenter;
+
+	Label^ lblUser = gcnew Label();
+	lblUser->Text = L"Usuario / Nombre";
+	lblUser->Font = gcnew System::Drawing::Font(L"Segoe UI", 9, FontStyle::Bold);
+	lblUser->ForeColor = Color::FromArgb(226, 232, 240);
+	lblUser->Location = Point(40, 130);
+	lblUser->AutoSize = true;
+
+	Panel^ panelUserBg = gcnew Panel();
+	panelUserBg->Size = System::Drawing::Size(320, 36);
+	panelUserBg->Location = Point(40, 155);
+	panelUserBg->BackColor = Color::FromArgb(51, 65, 85);
+	setRegionRounded(panelUserBg, 8);
+
+	this->txtLoginUser = gcnew TextBox();
+	this->txtLoginUser->Size = System::Drawing::Size(300, 20);
+	this->txtLoginUser->Location = Point(10, 8);
+	this->txtLoginUser->BorderStyle = BorderStyle::None;
+	this->txtLoginUser->BackColor = Color::FromArgb(51, 65, 85);
+	this->txtLoginUser->ForeColor = Color::White;
+	this->txtLoginUser->Font = gcnew System::Drawing::Font(L"Segoe UI", 10);
+	panelUserBg->Controls->Add(this->txtLoginUser);
+
+	Label^ lblPass = gcnew Label();
+	lblPass->Text = L"Contrase\u00f1a / Correo";
+	lblPass->Font = gcnew System::Drawing::Font(L"Segoe UI", 9, FontStyle::Bold);
+	lblPass->ForeColor = Color::FromArgb(226, 232, 240);
+	lblPass->Location = Point(40, 210);
+	lblPass->AutoSize = true;
+
+	Panel^ panelPassBg = gcnew Panel();
+	panelPassBg->Size = System::Drawing::Size(320, 36);
+	panelPassBg->Location = Point(40, 235);
+	panelPassBg->BackColor = Color::FromArgb(51, 65, 85);
+	setRegionRounded(panelPassBg, 8);
+
+	this->txtLoginPass = gcnew TextBox();
+	this->txtLoginPass->Size = System::Drawing::Size(300, 20);
+	this->txtLoginPass->Location = Point(10, 8);
+	this->txtLoginPass->BorderStyle = BorderStyle::None;
+	this->txtLoginPass->BackColor = Color::FromArgb(51, 65, 85);
+	this->txtLoginPass->ForeColor = Color::White;
+	this->txtLoginPass->Font = gcnew System::Drawing::Font(L"Segoe UI", 10);
+	panelPassBg->Controls->Add(this->txtLoginPass);
+
+	this->btnLoginSubmit = gcnew Button();
+	this->btnLoginSubmit->Text = L"Iniciar Sesion";
+	this->btnLoginSubmit->Size = System::Drawing::Size(320, 42);
+	this->btnLoginSubmit->Location = Point(40, 310);
+	styleButton(this->btnLoginSubmit, Color::FromArgb(255, 153, 0), Color::White, Color::FromArgb(230, 130, 0), Color::FromArgb(200, 110, 0), 10);
+	setRegionRounded(this->btnLoginSubmit, 8);
+	this->btnLoginSubmit->Click += gcnew EventHandler(this, &home_screen::btnLoginSubmit_Click);
+
+	if (hasLogo) {
+		this->panelLoginCard->Controls->Add(picLoginLogo);
+	} else {
+		this->panelLoginCard->Controls->Add(lblLoginTitle);
+	}
+	this->panelLoginCard->Controls->Add(lblLoginSubtitle);
+	this->panelLoginCard->Controls->Add(lblUser);
+	this->panelLoginCard->Controls->Add(panelUserBg);
+	this->panelLoginCard->Controls->Add(lblPass);
+	this->panelLoginCard->Controls->Add(panelPassBg);
+	this->panelLoginCard->Controls->Add(this->btnLoginSubmit);
+
+	this->panelLogin->Controls->Add(this->panelLoginCard);
+	this->Controls->Add(this->panelLogin);
+
+	this->panelInvoiceModal = gcnew Panel();
+	this->panelInvoiceModal->Size = System::Drawing::Size(540, 500);
+	this->panelInvoiceModal->Location = Point(280, 110);
+	this->panelInvoiceModal->BackColor = Color::White;
+	this->panelInvoiceModal->Visible = false;
+	setRegionRounded(this->panelInvoiceModal, 16);
+
+	Label^ lblModalTitle = gcnew Label();
+	lblModalTitle->Text = L"Comprobante de Pago & Despacho";
+	lblModalTitle->Font = gcnew System::Drawing::Font(L"Segoe UI", 14, FontStyle::Bold);
+	lblModalTitle->ForeColor = Color::FromArgb(15, 23, 42);
+	lblModalTitle->Location = Point(20, 20);
+	lblModalTitle->Size = System::Drawing::Size(500, 30);
+
+	this->lblInvoiceDetails = gcnew Label();
+	this->lblInvoiceDetails->Font = gcnew System::Drawing::Font(L"Consolas", 9);
+	this->lblInvoiceDetails->ForeColor = Color::FromArgb(51, 65, 85);
+	this->lblInvoiceDetails->Location = Point(20, 60);
+	this->lblInvoiceDetails->Size = System::Drawing::Size(500, 360);
+	this->lblInvoiceDetails->BackColor = Color::FromArgb(248, 250, 252);
+	this->lblInvoiceDetails->BorderStyle = BorderStyle::FixedSingle;
+
+	this->btnCloseInvoiceModal = gcnew Button();
+	this->btnCloseInvoiceModal->Text = L"Entendido y Finalizar";
+	this->btnCloseInvoiceModal->Size = System::Drawing::Size(200, 36);
+	this->btnCloseInvoiceModal->Location = Point(170, 440);
+	styleButton(this->btnCloseInvoiceModal, Color::FromArgb(255, 153, 0), Color::White, Color::FromArgb(230, 130, 0), Color::FromArgb(200, 110, 0), 9);
+	setRegionRounded(this->btnCloseInvoiceModal, 8);
+	this->btnCloseInvoiceModal->Click += gcnew EventHandler(this, &home_screen::btnCloseInvoiceModal_Click);
+
+	this->panelInvoiceModal->Controls->Add(lblModalTitle);
+	this->panelInvoiceModal->Controls->Add(this->lblInvoiceDetails);
+	this->panelInvoiceModal->Controls->Add(this->btnCloseInvoiceModal);
+	this->Controls->Add(this->panelInvoiceModal);
 
 	this->gridAdminProducts->ColumnCount = 6;
 	this->gridAdminProducts->Columns[0]->Name = L"ID";
@@ -1023,11 +1283,33 @@ void home_screen::btnAdminToggle_Click(System::Object^ sender, System::EventArgs
 		activeView = "admin";
 		btnAdminToggle->Text = L"Volver Tienda";
 		populateBstProductSelect();
+		
 		gridAdminProducts->Rows->Clear();
 		DoubleList<Product*>* allProducts = registry->getProductRepository()->getAllProducts();
 		for (auto it = allProducts->begin(); it != allProducts->end(); ++it) {
 			Product* p = *it;
 			gridAdminProducts->Rows->Add(p->getId().ToString(), toSystemString(p->getName()), toSystemString(p->getCategory()), p->getPrice().ToString("F2"), p->getStock().ToString(), toSystemString(p->getImagePath()));
+		}
+
+		gridAdminClients->Rows->Clear();
+		DoubleList<Client*>* allClients = registry->getClientRepository()->getAllClients();
+		for (auto it = allClients->begin(); it != allClients->end(); ++it) {
+			Client* c = *it;
+			gridAdminClients->Rows->Add(c->getId().ToString(), toSystemString(c->getName()), toSystemString(c->getEmail()), toSystemString(c->getPhone()), toSystemString(c->getAddress()), toSystemString(c->getMembership()));
+		}
+
+		gridAdminSuppliers->Rows->Clear();
+		DoubleList<Supplier*>* allSuppliers = registry->getSupplierRepository()->getAllSuppliers();
+		for (auto it = allSuppliers->begin(); it != allSuppliers->end(); ++it) {
+			Supplier* s = *it;
+			gridAdminSuppliers->Rows->Add(s->getId().ToString(), toSystemString(s->getName()), toSystemString(s->getEmail()), toSystemString(s->getPhone()), toSystemString(s->getCountry()), toSystemString(s->getProductCategory()));
+		}
+
+		gridAdminWarehouses->Rows->Clear();
+		DoubleList<Warehouse*>* allWarehouses = registry->getWarehouseRepository()->getAllWarehouses();
+		for (auto it = allWarehouses->begin(); it != allWarehouses->end(); ++it) {
+			Warehouse* w = *it;
+			gridAdminWarehouses->Rows->Add(w->getId().ToString(), toSystemString(w->getLocation()), w->getCapacity().ToString());
 		}
 	}
 	switchActiveView();
@@ -1061,7 +1343,8 @@ void home_screen::btnCheckout_Click(System::Object^ sender, System::EventArgs^ e
 		MessageBox::Show("Tu carrito esta vacio.", "Datamazon", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 		return;
 	}
-	Order* order = registry->getManageCartUseCase()->checkout(1, 456);
+	int clientId = (activeClient != nullptr) ? activeClient->getId() : 999;
+	Order* order = registry->getManageCartUseCase()->checkout(clientId, 456);
 	registry->getProcessOrderUseCase()->addOrder(order);
 	gpsStartNode = 0; gpsCurrentStep = 0; gpsPathLength = 0;
 	isCartOpen = false; cartTargetWidth = 0; timerCart->Start();
@@ -1543,11 +1826,80 @@ void home_screen::timerGPS_Tick(System::Object^ sender, System::EventArgs^ e)
 {
 	if (gpsCurrentStep >= gpsPathLength - 1) {
 		timerGPS->Stop();
+		Order* order = registry->getProcessOrderUseCase()->getOrderQueue()->peek();
+		if (order != nullptr) {
+			Invoice* inv = registry->getProcessOrderUseCase()->generateInvoice(order);
+			Shipment* ship = registry->getProcessOrderUseCase()->generateShipment(order, toStdString(cbDestinationCities->SelectedItem->ToString()));
+
+			System::Text::StringBuilder^ sb = gcnew System::Text::StringBuilder();
+			sb->AppendLine("==================================================");
+			sb->AppendLine("               BOLETA DE VENTA                    ");
+			sb->AppendLine("==================================================");
+			sb->AppendLine("Boleta Nro  : " + inv->getInvoiceId());
+			sb->AppendLine("Fecha       : " + toSystemString(inv->getDate()));
+			sb->AppendLine("Estado      : Completado");
+			sb->AppendLine("--------------------------------------------------");
+			if (activeClient != nullptr) {
+				sb->AppendLine("Cliente     : " + toSystemString(activeClient->getName()));
+				sb->AppendLine("Email       : " + toSystemString(activeClient->getEmail()));
+				sb->AppendLine("Celular     : " + toSystemString(activeClient->getPhone()));
+				sb->AppendLine("Direccion   : " + toSystemString(activeClient->getAddress()));
+				sb->AppendLine("Membresia   : " + toSystemString(activeClient->getMembership())->ToUpper());
+			} else {
+				sb->AppendLine("Cliente     : Administrador");
+			}
+			sb->AppendLine("--------------------------------------------------");
+			sb->AppendLine("Detalle del Pedido:");
+			DoubleList<OrderDetail*>* details = order->getDetails();
+			for (auto it = details->begin(); it != details->end(); ++it) {
+				OrderDetail* d = *it;
+				sb->AppendLine("  - " + toSystemString(d->getProduct()->getName()) + " x" + d->getQuantity() + " = S/. " + d->getSubtotal().ToString("F2"));
+			}
+			sb->AppendLine("--------------------------------------------------");
+			double baseTotal = order->getTotal();
+			sb->AppendLine("Subtotal    : S/. " + baseTotal.ToString("F2"));
+			double discount = 0;
+			if (activeCoupon != nullptr) {
+				discount = baseTotal * (activeCoupon->getDiscountPercent() / 100.0);
+				sb->AppendLine("Cupon       : " + toSystemString(activeCoupon->getCode()) + " (-" + activeCoupon->getDiscountPercent().ToString("F0") + "%) -> S/. -" + discount.ToString("F2"));
+			}
+			double primeDiscount = 0;
+			if (activeClient != nullptr && activeClient->getMembership() == "prime") {
+				primeDiscount = (baseTotal - discount) * 0.05;
+				sb->AppendLine("Dcto Prime  : 5% Adicional -> S/. -" + primeDiscount.ToString("F2"));
+			}
+			double finalSub = baseTotal - discount - primeDiscount;
+			double tax = finalSub * 0.18;
+			double finalTotal = finalSub + tax;
+			sb->AppendLine("IGV (18%)   : S/. " + tax.ToString("F2"));
+			sb->AppendLine("Total Neto  : S/. " + finalTotal.ToString("F2"));
+			sb->AppendLine("==================================================");
+			sb->AppendLine("               GUIA DE REMISION                   ");
+			sb->AppendLine("==================================================");
+			sb->AppendLine("Tracking    : " + toSystemString(ship->getTrackingCode()));
+			sb->AppendLine("Courier     : " + toSystemString(ship->getCourier()));
+			sb->AppendLine("Destino     : " + toSystemString(ship->getDestination()));
+			sb->Append("Ruta Optima : ");
+			for (int i = 0; i < gpsPathLength; ++i) {
+				Graph<string>* graph = registry->getProcessOrderUseCase()->getDeliveryGraph();
+				string cityName = graph->getVertex(gpsPath[i]);
+				if (i > 0) sb->Append(" -> ");
+				sb->Append(toSystemString(cityName));
+			}
+			sb->AppendLine();
+			sb->AppendLine("==================================================");
+
+			this->lblInvoiceDetails->Text = sb->ToString();
+			delete inv;
+			delete ship;
+		}
+
 		registry->getProcessOrderUseCase()->processNextOrder();
 		registry->getManageCartUseCase()->clearCart();
 		updateCartUI();
-		MessageBox::Show("Pedido entregado exitosamente.", "Datamazon Logistics", MessageBoxButtons::OK, MessageBoxIcon::Information);
-		activeView = "store"; switchActiveView();
+
+		this->panelInvoiceModal->Visible = true;
+		this->panelInvoiceModal->BringToFront();
 		return;
 	}
 	gpsCurrentStep++;
@@ -1835,6 +2187,102 @@ void home_screen::refreshProductCatalog()
 	populateBstProductSelect();
 	renderCurrentPageProducts();
 	panelStructureDraw->Invalidate();
+}
+
+void home_screen::btnLoginSubmit_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	String^ user = txtLoginUser->Text->Trim();
+	String^ pass = txtLoginPass->Text->Trim();
+
+	if (user == "" || pass == "") {
+		MessageBox::Show("Por favor, rellene todos los campos.", "Login", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+		return;
+	}
+
+	if (user->ToLower() == "admin" && pass == "sixseven") {
+		currentUserRole = "admin";
+		activeClient = nullptr;
+
+		std::ofstream adminFile("admins.txt", std::ios_base::app);
+		if (adminFile.is_open()) {
+			adminFile << toStdString(user) << "," << toStdString(pass) << "\n";
+			adminFile.close();
+		}
+
+		btnAdminToggle->Visible = true;
+		activeView = "store";
+		switchActiveView();
+		refreshProductCatalog();
+		MessageBox::Show("Sesion iniciada como Administrador.", "Datamazon Security", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	} else {
+		currentUserRole = "client";
+		btnAdminToggle->Visible = false;
+
+		Client* found = nullptr;
+		DoubleList<Client*>* allClients = registry->getClientRepository()->getAllClients();
+		for (auto it = allClients->begin(); it != allClients->end(); ++it) {
+			if (toStdString(user) == (*it)->getName()) {
+				found = *it;
+				break;
+			}
+		}
+
+		if (found != nullptr) {
+			activeClient = found;
+		} else {
+			int newId = rand() % 10000 + 1000;
+			string name = toStdString(user);
+			string email = toStdString(pass);
+			string phone = "9" + std::to_string(10000000 + (rand() % 90000000));
+			string address = "Av. Principal " + std::to_string(100 + (rand() % 900));
+			string membership = (rand() % 10 < 3) ? "prime" : "normal";
+
+			Client* newCli = new Client(newId, name, email, phone, address, membership);
+			registry->getClientRepository()->addClient(newCli);
+			registry->getClientRepository()->saveClients();
+			activeClient = newCli;
+		}
+
+		activeView = "store";
+		switchActiveView();
+		refreshProductCatalog();
+		MessageBox::Show("Bienvenido, " + toSystemString(activeClient->getName()) + " (" + toSystemString(activeClient->getMembership()) + ").", "Datamazon Store", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	}
+}
+
+void home_screen::btnApplyCoupon_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	if (activeView != "store") return;
+	string code = toStdString(txtCouponCode->Text->Trim());
+	if (code == "") {
+		lblCouponStatus->Text = L"Ingrese un codigo de cupon.";
+		lblCouponStatus->ForeColor = Color::FromArgb(220, 50, 50);
+		return;
+	}
+	Coupon* c = registry->getCouponRepository()->getCouponByCode(code);
+	if (c != nullptr) {
+		activeCoupon = c;
+		lblCouponStatus->Text = "Cupon " + toSystemString(c->getCode()) + " aplicado (-" + c->getDiscountPercent().ToString("F0") + "%).";
+		lblCouponStatus->ForeColor = Color::FromArgb(16, 185, 129);
+		updateCartUI();
+	} else {
+		activeCoupon = nullptr;
+		lblCouponStatus->Text = L"Cupon invalido o vencido.";
+		lblCouponStatus->ForeColor = Color::FromArgb(220, 50, 50);
+		updateCartUI();
+	}
+}
+
+void home_screen::btnCloseInvoiceModal_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	panelInvoiceModal->Visible = false;
+	activeCoupon = nullptr;
+	txtCouponCode->Text = L"";
+	lblCouponStatus->Text = L"";
+	registry->getManageCartUseCase()->clearCart();
+	updateCartUI();
+	activeView = "store";
+	switchActiveView();
 }
 
 [System::STAThreadAttribute]

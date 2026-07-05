@@ -65,5 +65,15 @@ public:
             }
             suppFile.close();
         }
+
+        std::ofstream wareFile("warehouses.txt");
+        if (wareFile.is_open()) {
+            std::string wareLocations[5] = { "Lima Centro Hub", "Lima Norte Warehouse", "Arequipa Logistics", "Trujillo Distribution", "Cusco Fulfillment" };
+            for (int i = 1; i <= 5; ++i) {
+                int capacity = 1000 + (std::rand() % 9000);
+                wareFile << i << "," << wareLocations[i - 1] << "," << capacity << "\n";
+            }
+            wareFile.close();
+        }
     }
 };

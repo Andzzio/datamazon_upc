@@ -5,6 +5,7 @@
 #include "../../Domain/Entities/Product.h"
 #include "../../Domain/Entities/Client.h"
 #include "../../Domain/Entities/Supplier.h"
+#include "../../Domain/Entities/Warehouse.h"
 
 using namespace std;
 
@@ -124,6 +125,34 @@ public:
             getline(ss, country, ',');
             getline(ss, category, ',');
             suppliers->addBack(new Supplier(id, name, email, phone, country, category));
+        }
+        file.close();
+    }
+
+    static void saveWarehouses(DoubleList<Warehouse*>* warehouses, string filename = "warehouses.txt") {
+        ofstream file(filename);
+        if (!file.is_open()) return;
+        Node<Warehouse*>* current = warehouses->head;
+        while (current != nullptr) {
+            Warehouse* w = current->value;
+            file << w->getId() << "," << w->getLocation() << "," << w->getCapacity() << "\n";
+            current = current->next;
+        }
+        file.close();
+    }
+
+    static void loadWarehouses(DoubleList<Warehouse*>* warehouses, string filename = "warehouses.txt") {
+        ifstream file(filename);
+        if (!file.is_open()) return;
+        string line;
+        while (getline(file, line)) {
+            stringstream ss(line);
+            string token;
+            int id; string location; int capacity;
+            getline(ss, token, ','); id = stoi(token);
+            getline(ss, location, ',');
+            getline(ss, token, ','); capacity = stoi(token);
+            warehouses->addBack(new Warehouse(id, location, capacity));
         }
         file.close();
     }

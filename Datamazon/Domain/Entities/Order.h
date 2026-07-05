@@ -32,6 +32,7 @@ public:
     void   setStatus(string s) { status = s; }
     Payment* getPayment() { return payment; }
     void   setPayment(Payment* p) { payment = p; }
+    DoubleList<OrderDetail*>* getDetails() { return details; }
 
     void addDetail(OrderDetail* detail) {
         details->addBack(detail);
