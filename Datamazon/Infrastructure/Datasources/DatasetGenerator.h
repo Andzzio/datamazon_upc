@@ -18,9 +18,17 @@ public:
         std::ofstream prodFile("products.txt");
         if (prodFile.is_open()) {
             for (int i = 1; i <= numProducts; ++i) {
-                std::string name = prodNames[std::rand() % numNames] + " " + prodBrands[std::rand() % numNames];
-                std::string cat = categories[std::rand() % 3];
-                double price = 10.0 + (std::rand() % 4990) + (std::rand() % 100) / 100.0;
+                int nameIdx = std::rand() % numNames;
+                std::string name = prodNames[nameIdx] + " " + prodBrands[std::rand() % numNames];
+                std::string cat = "";
+                if (nameIdx >= 0 && nameIdx <= 4) {
+                    cat = "Tecnologia";
+                } else if (nameIdx >= 5 && nameIdx <= 7) {
+                    cat = "Ropa";
+                } else {
+                    cat = "Educacion";
+                }
+                double price = 10.0 + (std::rand() % 2000) + (std::rand() % 100) / 100.0;
                 int stock = 5 + (std::rand() % 95);
                 std::string image = TextFileDatasource::getDefaultImageForName(name);
                 prodFile << i << "," << name << "," << cat << "," << price << "," << stock << "," << image << "\n";

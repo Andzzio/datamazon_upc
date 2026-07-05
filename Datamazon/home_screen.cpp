@@ -1,6 +1,26 @@
 #include "home_screen.h"
+#include "Infrastructure/Sorting/Sorting.h"
 
 using namespace Datamazon;
+
+bool compareNameAsc(Product* a, Product* b) {
+	return a->getName() < b->getName();
+}
+bool compareNameDesc(Product* a, Product* b) {
+	return a->getName() > b->getName();
+}
+bool comparePriceAsc(Product* a, Product* b) {
+	return a->getPrice() < b->getPrice();
+}
+bool comparePriceDesc(Product* a, Product* b) {
+	return a->getPrice() > b->getPrice();
+}
+bool compareStockAsc(Product* a, Product* b) {
+	return a->getStock() < b->getStock();
+}
+bool compareStockDesc(Product* a, Product* b) {
+	return a->getStock() > b->getStock();
+}
 
 void home_screen::InitializeComponent(void)
 {
@@ -146,10 +166,35 @@ void home_screen::InitializeComponent(void)
 	this->txtMaxPrice->BackColor = Color::White;
 	this->panelMaxPrice->Controls->Add(this->txtMaxPrice);
 
+	Label^ lblSortLabel = gcnew Label();
+	lblSortLabel->Text = L"Ordenar por";
+	lblSortLabel->Font = gcnew System::Drawing::Font(L"Segoe UI", 9);
+	lblSortLabel->ForeColor = Color::FromArgb(86, 89, 89);
+	lblSortLabel->Location = Point(20, 205);
+	lblSortLabel->AutoSize = true;
+
+	this->cbSortCriteria = gcnew ComboBox();
+	this->cbSortCriteria->Size = System::Drawing::Size(155, 28);
+	this->cbSortCriteria->Location = Point(20, 228);
+	this->cbSortCriteria->DropDownStyle = ComboBoxStyle::DropDownList;
+	this->cbSortCriteria->Font = gcnew System::Drawing::Font(L"Segoe UI", 9);
+	this->cbSortCriteria->FlatStyle = FlatStyle::Flat;
+	this->cbSortCriteria->BackColor = Color::FromArgb(248, 250, 252);
+	this->cbSortCriteria->DrawMode = System::Windows::Forms::DrawMode::OwnerDrawFixed;
+	this->cbSortCriteria->DrawItem += gcnew DrawItemEventHandler(this, &home_screen::comboBox_DrawItem);
+	this->cbSortCriteria->Items->Add("Sin ordenar");
+	this->cbSortCriteria->Items->Add("Nombre: A - Z");
+	this->cbSortCriteria->Items->Add("Nombre: Z - A");
+	this->cbSortCriteria->Items->Add("Precio: Menor a Mayor");
+	this->cbSortCriteria->Items->Add("Precio: Mayor a Menor");
+	this->cbSortCriteria->Items->Add("Stock: Menor a Mayor");
+	this->cbSortCriteria->Items->Add("Stock: Mayor a Menor");
+	this->cbSortCriteria->SelectedIndex = 0;
+
 	this->btnApplyFilters = gcnew Button();
 	this->btnApplyFilters->Text = L"Aplicar Filtros";
 	this->btnApplyFilters->Size = System::Drawing::Size(155, 36);
-	this->btnApplyFilters->Location = Point(20, 210);
+	this->btnApplyFilters->Location = Point(20, 280);
 	styleButton(this->btnApplyFilters, Color::FromArgb(255, 153, 0), Color::White, Color::FromArgb(230, 130, 0), Color::FromArgb(200, 110, 0), 9);
 	this->btnApplyFilters->Click += gcnew EventHandler(this, &home_screen::btnApplyFilters_Click);
 	setRegionRounded(this->btnApplyFilters, 10);
@@ -157,7 +202,7 @@ void home_screen::InitializeComponent(void)
 	this->btnClearFilters = gcnew Button();
 	this->btnClearFilters->Text = L"Limpiar";
 	this->btnClearFilters->Size = System::Drawing::Size(155, 34);
-	this->btnClearFilters->Location = Point(20, 258);
+	this->btnClearFilters->Location = Point(20, 328);
 	styleButton(this->btnClearFilters, Color::FromArgb(241, 245, 249), Color::FromArgb(71, 85, 105), Color::FromArgb(226, 232, 240), Color::FromArgb(203, 213, 225), 9);
 	this->btnClearFilters->Click += gcnew EventHandler(this, &home_screen::btnClearFilters_Click);
 	setRegionRounded(this->btnClearFilters, 10);
@@ -169,6 +214,8 @@ void home_screen::InitializeComponent(void)
 	this->panelFilters->Controls->Add(this->panelMinPrice);
 	this->panelFilters->Controls->Add(lblDash);
 	this->panelFilters->Controls->Add(this->panelMaxPrice);
+	this->panelFilters->Controls->Add(lblSortLabel);
+	this->panelFilters->Controls->Add(this->cbSortCriteria);
 	this->panelFilters->Controls->Add(this->btnApplyFilters);
 	this->panelFilters->Controls->Add(this->btnClearFilters);
 
@@ -930,6 +977,7 @@ void home_screen::btnApplyFilters_Click(System::Object^ sender, System::EventArg
 			currentProductList->push_back(p);
 		}
 	}
+	applySortingToCurrentList();
 	currentPage = 1;
 	renderCurrentPageProducts();
 }
@@ -940,6 +988,7 @@ void home_screen::btnClearFilters_Click(System::Object^ sender, System::EventArg
 	txtMinPrice->Text = L"0";
 	txtMaxPrice->Text = L"5000";
 	txtSearch->Text = L"";
+	cbSortCriteria->SelectedIndex = 0;
 	refreshProductCatalog();
 }
 
@@ -953,6 +1002,7 @@ void home_screen::txtSearch_TextChanged(System::Object^ sender, System::EventArg
 		currentProductList->push_back(*it);
 	}
 	delete filtered;
+	applySortingToCurrentList();
 	currentPage = 1;
 	renderCurrentPageProducts();
 }
@@ -1748,6 +1798,43 @@ void home_screen::renderCurrentPageProducts()
 	for (int i = startIdx; i < endIdx; ++i) {
 		createProductCard((*currentProductList)[i]);
 	}
+}
+
+void home_screen::applySortingToCurrentList()
+{
+	int n = (int)currentProductList->size();
+	if (n <= 1) return;
+
+	Product** arr = &(*currentProductList)[0];
+	int sel = cbSortCriteria->SelectedIndex;
+
+	if (sel == 1) {
+		quickSort(arr, 0, n - 1, compareNameAsc);
+	} else if (sel == 2) {
+		quickSort(arr, 0, n - 1, compareNameDesc);
+	} else if (sel == 3) {
+		mergeSort(arr, 0, n - 1, comparePriceAsc);
+	} else if (sel == 4) {
+		mergeSort(arr, 0, n - 1, comparePriceDesc);
+	} else if (sel == 5) {
+		heapSort(arr, n, compareStockAsc);
+	} else if (sel == 6) {
+		heapSort(arr, n, compareStockDesc);
+	}
+}
+
+void home_screen::refreshProductCatalog()
+{
+	currentProductList->clear();
+	DoubleList<Product*>* allProducts = registry->getProductRepository()->getAllProducts();
+	for (auto it = allProducts->begin(); it != allProducts->end(); ++it) {
+		currentProductList->push_back(*it);
+	}
+	applySortingToCurrentList();
+	currentPage = 1;
+	populateBstProductSelect();
+	renderCurrentPageProducts();
+	panelStructureDraw->Invalidate();
 }
 
 [System::STAThreadAttribute]

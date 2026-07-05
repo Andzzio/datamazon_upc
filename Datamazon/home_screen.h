@@ -51,6 +51,7 @@ namespace Datamazon {
 		System::Windows::Forms::Panel^ panelFilters;
 		System::Windows::Forms::Label^ lblFiltersTitle;
 		System::Windows::Forms::ComboBox^ cbCategories;
+		System::Windows::Forms::ComboBox^ cbSortCriteria;
 		System::Windows::Forms::Panel^ panelMinPrice;
 		System::Windows::Forms::TextBox^ txtMinPrice;
 		System::Windows::Forms::Panel^ panelMaxPrice;
@@ -274,17 +275,7 @@ namespace Datamazon {
 			cbDestinationCities->SelectedIndex = 0;
 		}
 
-		void refreshProductCatalog() {
-			currentProductList->clear();
-			DoubleList<Product*>* allProducts = registry->getProductRepository()->getAllProducts();
-			for (auto it = allProducts->begin(); it != allProducts->end(); ++it) {
-				currentProductList->push_back(*it);
-			}
-			currentPage = 1;
-			populateBstProductSelect();
-			renderCurrentPageProducts();
-			panelStructureDraw->Invalidate();
-		}
+		void refreshProductCatalog();
 
 		void createProductCard(Product* p) {
 			Panel^ card = gcnew Panel();
@@ -390,5 +381,6 @@ namespace Datamazon {
 		void btnNextPage_Click(System::Object^ sender, System::EventArgs^ e);
 		void btnGoPage_Click(System::Object^ sender, System::EventArgs^ e);
 		void renderCurrentPageProducts();
+		void applySortingToCurrentList();
 	};
 }
