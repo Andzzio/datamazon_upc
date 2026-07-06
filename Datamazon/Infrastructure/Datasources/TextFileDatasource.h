@@ -71,7 +71,7 @@ public:
         while (current != nullptr) {
             Client* c = current->value;
             file << c->getId() << "," << c->getName() << ","
-                 << c->getEmail() << "," << c->getAddress()
+                 << c->getEmail() << "," << c->getPhone() << "," << c->getAddress()
                  << "," << c->getMembership() << "\n";
             current = current->next;
         }
@@ -85,13 +85,14 @@ public:
         while (getline(file, line)) {
             stringstream ss(line);
             string token;
-            int id; string name, email, address, membership;
+            int id; string name, email, phone, address, membership;
             getline(ss, token, ','); id = stoi(token);
             getline(ss, name, ',');
             getline(ss, email, ',');
+            getline(ss, phone, ',');
             getline(ss, address, ',');
             getline(ss, membership, ',');
-            clients->addBack(new Client(id, name, email, "N/A", address, membership));
+            clients->addBack(new Client(id, name, email, phone, address, membership));
         }
         file.close();
     }

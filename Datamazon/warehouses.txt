@@ -1,5 +1,5 @@
-1,Lima Centro Hub,6907
-2,Lima Norte Warehouse,2127
-3,Arequipa Logistics,2239
-4,Trujillo Distribution,1932
-5,Cusco Fulfillment,8889
+1,Lima Centro Hub,8088
+2,Lima Norte Warehouse,7442
+3,Arequipa Logistics,1060
+4,Trujillo Distribution,3066
+5,Cusco Fulfillment,9053

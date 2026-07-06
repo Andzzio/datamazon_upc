@@ -45,9 +45,10 @@ public:
             for (int i = 1; i <= numClients; ++i) {
                 std::string name = clientFirst[std::rand() % numNames] + " " + clientLast[std::rand() % numNames];
                 std::string email = clientFirst[std::rand() % numNames] + std::to_string(i) + "@datamazon.com";
+                std::string phone = "9" + std::to_string(10000000 + (std::rand() % 90000000));
                 std::string address = "Av. Principal " + std::to_string(100 + (std::rand() % 900));
                 std::string mem = memberships[std::rand() % 2];
-                clientFile << i << "," << name << "," << email << "," << address << "," << mem << "\n";
+                clientFile << i << "," << name << "," << email << "," << phone << "," << address << "," << mem << "\n";
             }
             clientFile.close();
         }

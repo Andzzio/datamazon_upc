@@ -895,7 +895,6 @@ void home_screen::InitializeComponent(void)
 
 	this->panelHeader->Visible = false;
 	this->panelFilters->Visible = false;
-	this->panelCart->Visible = false;
 	this->panelContent->Visible = false;
 	this->panelProductDetail->Visible = false;
 	this->panelAdmin->Visible = false;
@@ -993,6 +992,22 @@ void home_screen::InitializeComponent(void)
 	setRegionRounded(this->btnLoginSubmit, 8);
 	this->btnLoginSubmit->Click += gcnew EventHandler(this, &home_screen::btnLoginSubmit_Click);
 
+	Label^ lblHintUser = gcnew Label();
+	lblHintUser->Text = L"Ingresa cualquier credencial para acceder como cliente.";
+	lblHintUser->Font = gcnew System::Drawing::Font(L"Segoe UI", 8);
+	lblHintUser->ForeColor = Color::FromArgb(148, 163, 184);
+	lblHintUser->Location = Point(40, 362);
+	lblHintUser->Size = System::Drawing::Size(320, 16);
+	lblHintUser->TextAlign = ContentAlignment::MiddleCenter;
+
+	Label^ lblHintAdmin = gcnew Label();
+	lblHintAdmin->Text = L"Acceso admin:  admin / sixseven";
+	lblHintAdmin->Font = gcnew System::Drawing::Font(L"Segoe UI", 8, FontStyle::Italic);
+	lblHintAdmin->ForeColor = Color::FromArgb(100, 116, 139);
+	lblHintAdmin->Location = Point(40, 380);
+	lblHintAdmin->Size = System::Drawing::Size(320, 16);
+	lblHintAdmin->TextAlign = ContentAlignment::MiddleCenter;
+
 	if (hasLogo) {
 		this->panelLoginCard->Controls->Add(picLoginLogo);
 	} else {
@@ -1004,6 +1019,8 @@ void home_screen::InitializeComponent(void)
 	this->panelLoginCard->Controls->Add(lblPass);
 	this->panelLoginCard->Controls->Add(panelPassBg);
 	this->panelLoginCard->Controls->Add(this->btnLoginSubmit);
+	this->panelLoginCard->Controls->Add(lblHintUser);
+	this->panelLoginCard->Controls->Add(lblHintAdmin);
 
 	this->panelLogin->Controls->Add(this->panelLoginCard);
 	this->Controls->Add(this->panelLogin);
@@ -1485,7 +1502,39 @@ void home_screen::btnGenerateDataset_Click(System::Object^ sender, System::Event
 		int count = Int32::Parse(txtDatasetCount->Text);
 		DatasetGenerator::generateAndSave(count, 50, 10);
 		registry->getProductRepository()->loadProducts();
+		registry->getClientRepository()->loadClients();
+		registry->getSupplierRepository()->loadSuppliers();
+		registry->getWarehouseRepository()->loadWarehouses();
 		refreshProductCatalog();
+
+		gridAdminProducts->Rows->Clear();
+		DoubleList<Product*>* prods = registry->getProductRepository()->getAllProducts();
+		for (auto it = prods->begin(); it != prods->end(); ++it) {
+			Product* p = *it;
+			gridAdminProducts->Rows->Add(p->getId().ToString(), toSystemString(p->getName()), toSystemString(p->getCategory()), p->getPrice().ToString("F2"), p->getStock().ToString(), toSystemString(p->getImagePath()));
+		}
+
+		gridAdminClients->Rows->Clear();
+		DoubleList<Client*>* cls = registry->getClientRepository()->getAllClients();
+		for (auto it = cls->begin(); it != cls->end(); ++it) {
+			Client* c = *it;
+			gridAdminClients->Rows->Add(c->getId().ToString(), toSystemString(c->getName()), toSystemString(c->getEmail()), toSystemString(c->getPhone()), toSystemString(c->getAddress()), toSystemString(c->getMembership()));
+		}
+
+		gridAdminSuppliers->Rows->Clear();
+		DoubleList<Supplier*>* supps = registry->getSupplierRepository()->getAllSuppliers();
+		for (auto it = supps->begin(); it != supps->end(); ++it) {
+			Supplier* s = *it;
+			gridAdminSuppliers->Rows->Add(s->getId().ToString(), toSystemString(s->getName()), toSystemString(s->getEmail()), toSystemString(s->getPhone()), toSystemString(s->getCountry()), toSystemString(s->getProductCategory()));
+		}
+
+		gridAdminWarehouses->Rows->Clear();
+		DoubleList<Warehouse*>* wares = registry->getWarehouseRepository()->getAllWarehouses();
+		for (auto it = wares->begin(); it != wares->end(); ++it) {
+			Warehouse* w = *it;
+			gridAdminWarehouses->Rows->Add(w->getId().ToString(), toSystemString(w->getLocation()), w->getCapacity().ToString());
+		}
+
 		MessageBox::Show("Dataset generado e indexado.", "Datamazon", MessageBoxButtons::OK, MessageBoxIcon::Information);
 	} catch (...) {
 		MessageBox::Show("Cantidad invalida.", "Datamazon", MessageBoxButtons::OK, MessageBoxIcon::Error);
